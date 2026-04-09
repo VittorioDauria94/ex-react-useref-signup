@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 const specializationArray = ["Full Stack", "Frontend", "Backend"];
 
@@ -7,11 +7,11 @@ const numbers = "0123456789";
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\\",.<>?/`~";
 
 function App() {
-  const [name, setName] = useState("");
+  const name = useRef();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [expYear, setExpYear] = useState("");
+  const specialization = useRef();
+  const expYear = useRef();
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
@@ -45,12 +45,12 @@ function App() {
     e.preventDefault();
 
     if (
-      !name.trim() ||
+      !name.current.value.trim() ||
       !username.trim() ||
       !password.trim() ||
-      specialization === "" ||
-      expYear === "" ||
-      Number(expYear) < 0 ||
+      specialization.current.value === "" ||
+      expYear.current.value === "" ||
+      Number(expYear.current.value) < 0 ||
       !description.trim() ||
       !isUsernameValid ||
       !isDescriptionValid ||
@@ -63,11 +63,11 @@ function App() {
     setError("");
 
     console.log(`
-      Nome completo: ${name}
+      Nome completo: ${name.current.value}
       Username: ${username}
       Password: ${password}
-      Specializzazione: ${specialization}
-      Anni di esperienza: ${expYear}
+      Specializzazione: ${specialization.current.value}
+      Anni di esperienza: ${expYear.current.value}
       Breve descrizione: ${description}`);
   };
 
@@ -83,8 +83,7 @@ function App() {
             type="text"
             name="name"
             id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            ref={name}
             placeholder="Inserisci il tuo nome e cognome..."
             required
           />
@@ -144,8 +143,7 @@ function App() {
             className="form-select"
             name="specialization"
             id="specialization"
-            value={specialization}
-            onChange={(e) => setSpecialization(e.target.value)}
+            ref={specialization}
             required
           >
             <option value="">Seleziona la specializzazione</option>
@@ -167,8 +165,7 @@ function App() {
             name="expYear"
             id="expYear"
             min={0}
-            value={expYear}
-            onChange={(e) => setExpYear(e.target.value)}
+            ref={expYear}
             required
           />
         </div>
