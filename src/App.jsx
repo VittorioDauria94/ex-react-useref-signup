@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const specializationArray = ["Full Stack", "Frontend", "Backend"];
 
@@ -14,6 +14,11 @@ function App() {
   const expYear = useRef();
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
+  const startPage = useRef();
+
+  useEffect(() => {
+    name.current.focus();
+  }, []);
 
   const isUsernameValid = useMemo(() => {
     const charsIsValid = username
@@ -71,8 +76,19 @@ function App() {
       Breve descrizione: ${description}`);
   };
 
+  function handleReset() {
+    name.current.value = "";
+    setUsername("");
+    setPassword("");
+    specialization.current.value = "";
+    expYear.current.value = "";
+    setDescription("");
+    setError("");
+    name.current.focus();
+  }
+
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" ref={startPage}>
       <form autoComplete="off" onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label" htmlFor="name">
@@ -200,7 +216,32 @@ function App() {
         <button type="submit" className="btn btn-primary">
           Invia
         </button>
+        <button
+          type="button"
+          className="btn btn-danger ms-3"
+          onClick={handleReset}
+        >
+          Reset
+        </button>
       </form>
+      <div className="fixed-bottom pe-none">
+        <div className="d-flex flex-row-reverse pe-3 pb-5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="36"
+            height="36"
+            fill="currentColor"
+            style={{ cursor: "pointer" }}
+            className="bi bi-arrow-up-square-fill pe-auto"
+            viewBox="0 0 16 16"
+            onClick={() =>
+              startPage.current.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            <path d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0" />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 }
